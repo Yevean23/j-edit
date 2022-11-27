@@ -1,0 +1,303 @@
+<html>
+    <title>
+        j-Edit | Online JSON Editor
+    </title>
+    <head>
+        <link rel="stylesheet" href="j-edit.css">   
+        <script src="dragN.js"></script>
+    </head>
+    <body>
+        <div class="top">
+                <div class="explain">
+                    <img src="https://img.icons8.com/ios-filled/100/000000/json.png">
+                    <div class="json_filename">
+                        <input type="text" placeholder="Filename" class="filename">
+                    </div>
+                    <div class="logo">
+                        <h1>JSON-Editor</h1>
+                    </div>
+                    
+                </div>
+                <div>
+                    <input type="file" name="" id="" class="json_input" onchange="import_json();" hidden>
+                </div>
+                <div class="menu-bar">
+                    <button class="dropbtn">File
+                        <div class="dropdown-content">
+                            <a class="new_file">New File (Ctrl N)</a>
+                            <a class="save_file" onclick="save_state()">Download File (Ctrl S)</a>
+                            <a class="open_file">Open File (Ctrl O)</a>
+                            <a class="print_file">Print (Ctrl P)</a>
+                            <a class="open_sample">Open Sample</a>
+                        </div>
+                    </button>
+        
+                    <button class="dropbtn">Edit
+                        <div class="dropdown-content">
+                            <a class="" onclick="undo()">Undo (Ctrl Z)</a>
+                            <a class="">Redo (Ctrl Y)</a>
+                            <a class="" onclick="copy_element()">Copy (Ctrl C)</a>
+                            <a class="" onclick="cut_element()">Cut (Ctrl X)</a>
+                            <a class="" onclick="paste_element()">Paste (Ctrl P)</a>
+                            <a class="" onclick="delete_element(this,true)">Delete (Ctrl Del)</a>
+                        </div>
+                    </button>
+        
+                    <button class="dropbtn">Insert
+                        <div class="dropdown-content">
+                            <a class="" onclick="add_using_enter()">Add Entry (Enter)</a>
+                            <a class="">Add Nested Object</a>
+                            <a class="">Add Array</a>
+                        </div>
+                    </button>
+                    
+                    <button class="dropbtn">Format
+                        <div class="dropdown-content">
+                            <a class="" onclick="toggle_shortcut()">Toggle Type (Ctrl Q)</a>
+                            <a class="">Expand (Ctrl Enter)</a>
+                        </div>
+                    </button>
+                    
+                    <button class="dropbtn">View
+                        <div class="dropdown-content">
+                            <a class="">Toggle Preview</a>
+                            <a class="">Switch View</a>
+                        </div>
+                    </button>
+        
+                    <button class="dropbtn">Tools
+                        <div class="dropdown-content">
+                            <a class="">Color Coding</a>
+                            <a class="">Tool Tips</a>
+                        </div>
+                    </button>
+        
+                    <button class="dropbtn">Help
+                        <div class="dropdown-content">
+                            <a class="" onclick="popup()">About</a>
+                            <a class="">Tutorial</a>
+                            <a class="">Keyboard Shortcuts</a>
+                            <a class="dev-updates" onclick="popup(this)">Developer Updates</a>
+                        </div>
+                    </button>
+                </div>
+                <div class="document_tools">
+                    <div class="document_tools_content">
+                        Auto-Format<input type="checkbox" checked class="auto_format">
+                    </div>
+                    <div class="document_tools_content">
+                        Preview<input type="checkbox" class="preview_area_checked">
+                    </div>
+                    <div class="document_tools_content">
+                        Font Size <select class="font_size" onclick="change_font(this)">
+                                    <option value="small">Small</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="large">Large</option>
+                                </select>
+                    </div>
+                    <div class="document_tools_content">
+                        Indent Size <select class="indent_size" onclick="change_indent(this)">
+                                    <option value=1 selected>Small</option>
+                                    <option value=4>Medium</option>
+                                    <option value=7>Large</option>
+                                </select>
+                    </div>
+                    <div class="document_tools_content">
+                        Color Code Editor<input type="checkbox" class="color_code_editor">
+                    </div>
+                    <div class="document_tools_content editor_color_scheme" hidden>
+                        <button class="dropbtn"> Color Scheme 
+                            <div class="dropdown-content">
+                                <a class="color_scheme">String <input type="color" class="string color_scheme" value="#009100"></a> 
+                                <a class="color_scheme">Number <input type="color" class="number color_scheme" value="#ffa500"></a>
+                                <a class="color_scheme">Boolean <input type="color" class="boolean color_scheme" value="#0000ff"></a>
+                                <a class="color_scheme">Null <input type="color" class="null color_scheme" value="#800080"></a>
+                                <a class="color_scheme" hidden>Error <input type="color" class="error color_scheme" value="#ff0000"></a>
+                                <a class="color_scheme">Object <input type="color" class="object color_scheme" value="#f5deb3"></a>
+                                <a class="color_scheme">Array <input type="color" class="array color_scheme" value="#ffff00"></a>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="document_tools_content">
+                        Color Code Preview<input type="checkbox" class="">
+                    </div>
+                    
+                </div>
+        </div>
+        
+        <div class="document">
+            <div class="display_area">
+                <div class="dragn_notepad">
+                    <div class="drag_space inputs container" ondragend="collapse_check()">
+                    </div>
+                    <div class="ghost" onclick="add_content_(this)">
+                        <Label>+ Add Entry</Label>
+                    </div>
+                </div>
+                <div class="margin" hidden>
+
+                </div>
+                <div class="preview_area" hidden>
+                    <button onclick="copy_to_clip()" class="copy_to_clip">Copy to Clipboard</button>
+                    <textarea class="preview_text_area" contenteditable="true"></textarea>
+                </div>
+            </div>
+
+        </div>
+        
+    </body>
+</html>
+
+<!-- drag-N templates -->
+<template id="dragn-buffer">
+    <div class="dragn_buffer" ondragover="allow(this)" ondrop="drop(this)"></div>
+</template>
+
+<template id="dragn-space">
+    <div class="drag_space" ondragend="collapse_check()"></div>
+</template>
+
+<template id="dragn-content">
+    <div class="dragn_content container" draggable="true"></div>
+</template>
+
+
+<!-- j-edit templates -->
+<template id="json-innards">
+    <div class="json_innards">
+        
+        <label class="key-quotes">"</label>
+            <input type="text" placeholder="key" class="no_drag key json_entry">
+        <label class="key-quotes">"</label>
+        
+        <label class="json-colon">:</label>
+        
+        <label class="values-quotes">"</label>
+            <input type="text" placeholder="value" class="no_drag value json_entry">
+        <label class="values-quotes">"</label>
+        
+        <button class="tog string">string</button>
+        <button class="expand" onclick="expand_space(this)">Expand</button>
+        <button class="delete">X</button>
+    
+    </div>
+</template>
+
+
+<!-- pop-up templates -->
+<template id="pop-up">
+    <div class="pop_up">
+        <div class="pop_up_top">
+            <div>
+                <button class="pop_up_close" onclick="this.parentElement.parentElement.parentElement.remove()">X</button>
+                <h1 class="pop_up_header">
+                    About
+                </h1>
+            </div>
+        </div>
+        
+        <div class="pop_up_bottom">
+            <h3 class="pop_up_text">
+                Sample Description
+            </h3>
+        </div>
+    </div>
+</template>
+
+<!-- pop-up templates -->
+<template id="popup-dev-updates">
+    <div class="content">
+        <div class="header">
+            Developer Updates
+        </div>
+        <div class="body">
+            Dev Updates 07/30/2020<br>
+            <small>
+                + Bug Fixes <br>
+                &emsp;+ Fixed issue where when switching from object to array, the array was not hiding keys<br>
+                &emsp;+ Fixed issue where color scheme was not updating correctly<br>
+                <br>
+                + Usability <br>
+                &emsp;+ dragging and dropping preserves focus on the element. Maintaining focus on the caret position is #TODO<br>
+                &emsp;+ removed ability to choose color scheme while working out some bugs<br>
+                <br>
+            </small>
+            <br><br>
+
+            Dev Updates 07/28/2020<br>
+            <small>
+                + Bug Fixes <br>
+                &emsp;+ Can't open more than one dev updates<br>
+                <br>
+                + Visual Improvements <br>
+                &emsp;+ Dev Updates now scroll only the updates instead of all the contents<br>
+            </small>
+            <br><br>
+
+
+            Dev Updates 10/16/2019<br>
+            <small>
+                + Visual Style <br>
+                &emsp;+ Replaced 'Literal' type with : Number, Boolean, Null, Error<br>
+                &emsp;+ Moved the color scheme selector to a dropdown menu<br>
+            </small>
+            <br><br>
+
+            Dev Updates 10/9/2019<br>
+            <small>
+                + Bug Fixes <br>
+                &emsp;+ Fixed issue when user would highlight text in a field, copy it, and paste it, only to have the whole JSON entry be pasted rather than the text.<br>
+                &emsp;+ Fixed bug where user could not highlight text in the preview text field.<br>
+                &emsp;+ Fixed Bug where ' " ": ' still showed up when array elements are added.<br>
+                <br>
+                + Visual Style <br>
+                &emsp;+ Replaced 'Literal' type with : Number, Boolean, Null, Error<br>
+                &emsp;+ Moved the color scheme selector to a dropdown menu<br>
+            </small>
+            <br><br>
+
+            Dev Updates 10/4/2019<br>
+            <small>
+                + Usability <br>
+                &emsp;+ When user clicks left/right but is not at the start/end of an input field respectively, the caret will move within the input field.<br>
+                &emsp;&emsp;+ Caret only jumps at beginning or end of input field.<br>
+                + Bug Fixes <br>
+                &emsp;+ when a object was in an array, and a user key pressed in the preview text field, another object containing the original object was created<br>
+                &emsp;+ when dragging an entry into or out of an object, a drop field would remain visible around the object, even as others within the object were created<br>
+                <br>
+                + Keyboard Features <br>
+                &emsp;+ Continuing to add in keyboard shortcuts and as they are listed in the menu bar <br> 
+            </small>
+            <br><br>
+
+            Dev Updates 10/1/2019<br>
+            <small>
+                + Functionality <br>
+                &emsp;+ Added Indent Size dropdown <br>
+                &emsp;+ Fixed Bug: if auto-format was enabled, user would lose position in preview textarea when making changes <br>
+                &emsp;+ Fixed Bug: The 'X' button wasn't working <br>
+                &emsp;+ Pasted element now has input autoselected <br>
+                &emsp;+ After deleting with Keyboard shortcut, the next input is autoselected <br>
+                <br>
+                + Keyboard Features <br>
+                &emsp;+ CTRL+V bug fix: user can now hold down CTRL and press 'V' to paste multiple times. <br> 
+                &emsp; &emsp; + User can also hold down CTRL+V to spam paste <br>
+            </small>
+            <br><br>
+            
+            Dev Updates 9/26/2019<br>
+            <small>
+                + Keyboard Features <br>
+                &emsp;+ Up key will go to next highest input field of the same type <br>
+                &emsp;+ Down key will go down to the next input field of the same type <br>
+                &emsp;+ Left/ Right will toggle inputfields <br>
+                &emsp;+ CTRL+C / CTRL+V work, but some usability bugs remain <br>
+                &emsp;+ CTRL+DEL deletes the json field you are working on  <br>
+                <br>
+                + Pop Up Templates <br> 
+                &emsp;+ Dev Updates are now part of a template<br>
+            </small>
+            
+        </div>
+    </div>
+</template>
